@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  restorix:
+    image: specialaro/restorix:latest
+    container_name: restorix
+    restart: "no"
+    environment:
+      # RESTORIX MODE: backup OR restore
+      - MODE_ENV=backup
+      # FILENAME FOR BACKUP / RESTORE FILENAME
+      - FILENAME_ENV=testing
+    volumes:
+      # LIST OF VOLUMES TO BACKUP
+      # ----------------------------------------
+      - teste:/tobackup/teste:ro
+      - portainer_data:/tobackup/portainer_data:ro
+      # ----------------------------------------
+      # OUTPUT FOLDER WITH THE BACKUPS
+      - ./backup:/backup
+      # ----------------------------------------
+      # DO NOT DELETE THE NEXT LINE
+      - /var/run/docker.sock:/var/run/docker.sock
+
+# LIST OF VOLUMES TO BACKUP
+# Please always use "external: true" otherwise it can fail
+# --------------------------------------------------------
+volumes:
+  teste:
+    external: true
+  portainer_data:
+    external: true
+# --------------------------------------------------------
