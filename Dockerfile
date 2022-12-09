@@ -8,4 +8,6 @@ RUN apk update
 RUN apk add bash docker openssh sshpass
 
 ADD main.sh /app
-ENTRYPOINT [ "./main.sh" ]
+ADD start.sh /app
+
+ENTRYPOINT [ "./start.sh" ]
