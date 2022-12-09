@@ -89,7 +89,7 @@ if [[ "$MODE" == "restore" ]]; then
     cat $BACKUPS_DIR/$FILENAME.* | tar xzvf -
     
     for dir in $RESTORED_DIR/*/ ; do
-        basename=$(basename $dir)2
+        basename=$(basename $dir)
         docker volume create "$basename" 1> /dev/null
         
         docker run -v $basename:/data --name helper busybox true 1> /dev/null
