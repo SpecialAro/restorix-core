@@ -1,5 +1,17 @@
 #!/bin/bash
-APP_NAME_TAG="[RESTORIX]:"
+
+cat << "EOF"
+██████  ███████ ███████ ████████  ██████  ██████  ██ ██   ██ 
+██   ██ ██      ██         ██    ██    ██ ██   ██ ██  ██ ██  
+██████  █████   ███████    ██    ██    ██ ██████  ██   ███   
+██   ██ ██           ██    ██    ██    ██ ██   ██ ██  ██ ██  
+██   ██ ███████ ███████    ██     ██████  ██   ██ ██ ██   ██ 
+                                                                                                                          
+v0.0.1-alpha.1
+                                                                                                                          
+EOF
+
+APP_NAME_TAG="[RESTORIX]"
 BACKUPS_DIR=/backup
 TO_BACKUP_DIR=/tobackup
 RESTORED_DIR=/restored
@@ -45,18 +57,18 @@ fi
 mkdir -p $BACKUPS_DIR
 #### BACKUP UTILITY ####
 if [[ "$MODE" == "backup" ]]; then
-
+    
     echo "$APP_NAME_TAG ---- STARTING BACKUP ----"
     cd $BACKUPS_DIR
     rm -rf $FILENAME*
     tar -C $TO_BACKUP_DIR -cvzf - ./ | split -b $MAX_FILESIZE - "$FILENAME".
-
+    
     if [[ "$USE_SSH" == "true" ]]; then
         echo "$APP_NAME_TAG SEND FILE THROUGH SSH: started"
         sshpass -p "$SSH_PASSWORD" scp -o "StrictHostKeyChecking=no" -r $BACKUPS_DIR/* $SSH_USERNAME@$SSH_HOST:$SSH_PATH
         echo "$APP_NAME_TAG SEND FILE THROUGH SSH: ended"
     fi
-
+    
     echo "$APP_NAME_TAG ---- BACKUP ENDED ----"
     exit 0
 fi
@@ -65,21 +77,21 @@ fi
 #### RESTORE UTILITY ####
 if [[ "$MODE" == "restore" ]]; then
     echo "$APP_NAME_TAG ---- STARTING RESTORE ----"
-
+    
     if [[ "$USE_SSH" == "true" ]]; then
         echo "$APP_NAME_TAG RECEIVE FILE THROUGH SSH: started"
         sshpass -p "$SSH_PASSWORD" scp -o "StrictHostKeyChecking=no" -r $SSH_USERNAME@$SSH_HOST:$SSH_PATH/* $BACKUPS_DIR
         echo "$APP_NAME_TAG RECEIVE FILE THROUGH SSH: ended"
     fi
-
+    
     mkdir $RESTORED_DIR
     cd $RESTORED_DIR
     cat $BACKUPS_DIR/$FILENAME.* | tar xzvf -
-
+    
     for dir in $RESTORED_DIR/*/ ; do
         basename=$(basename $dir)2
         docker volume create "$basename" 1> /dev/null
-
+        
         docker run -v $basename:/data --name helper busybox true 1> /dev/null
         docker cp $dir/. helper:/data 1> /dev/null
         docker rm helper 1> /dev/null
