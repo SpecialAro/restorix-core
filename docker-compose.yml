@@ -7,13 +7,16 @@ services:
     restart: "no"
     environment:
       # RESTORIX MODE: backup OR restore
-      - MODE_ENV=backup
-      - SSH_HOST_ENV=
-      - SSH_USERNAME_ENV=
-      - SSH_PASSWORD_ENV=
-      - SSH_PATH_ENV=
+      - MODE_ENV=restore
       # OPTIONAL SETTINGS
       # ----------------------------------------
+
+      # SCP SSH SETTINGS
+      # If you want to use SCP uncomment the next for lines (all must have values, otherwise it will fail)
+      # - SSH_HOST_ENV=
+      # - SSH_USERNAME_ENV=
+      # - SSH_PASSWORD_ENV=
+      # - SSH_PATH_ENV=
 
       # FILENAME FOR BACKUP / RESTORE FILENAME
       # DEFAULT: output
