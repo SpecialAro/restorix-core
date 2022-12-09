@@ -8,7 +8,10 @@ services:
     environment:
       # RESTORIX MODE: backup OR restore
       - MODE_ENV=backup
-
+      - SSH_HOST_ENV=
+      - SSH_USERNAME_ENV=
+      - SSH_PASSWORD_ENV=
+      - SSH_PATH_ENV=
       # OPTIONAL SETTINGS
       # ----------------------------------------
 
