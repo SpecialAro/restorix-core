@@ -7,7 +7,7 @@ services:
     restart: "no"
     environment:
       # RESTORIX MODE: backup OR restore
-      - MODE_ENV=restore
+      - MODE_ENV=backup
 
       # OPTIONAL SETTINGS
       # ----------------------------------------
@@ -28,7 +28,7 @@ services:
       # LIST OF VOLUMES TO BACKUP
       # ----------------------------------------
       - teste:/tobackup/teste:ro
-      - portainer_data:/tobackup/portainer_data:ro
+      # - portainer_data:/tobackup/portainer_data:ro
       # ----------------------------------------
 
       # OUTPUT FOLDER WITH THE BACKUPS
