@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   restorix:
@@ -7,18 +7,35 @@ services:
     restart: "no"
     environment:
       # RESTORIX MODE: backup OR restore
-      - MODE_ENV=backup
+      - MODE_ENV=restore
+
+      # OPTIONAL SETTINGS
+      # ----------------------------------------
+
       # FILENAME FOR BACKUP / RESTORE FILENAME
-      - FILENAME_ENV=testing
+      # DEFAULT: output
+      # - FILENAME_ENV=testing
+
+      # MAX FILESIZE OF BACKUP
+      # Will split into multiple files of the defined size (in MB or KB)
+      # DEFAULT: 4000m (4GB)
+      # Example: 300m or 100k
+      # - MAX_FILESIZE_ENV=1k
+
+      # ----------------------------------------
+
     volumes:
       # LIST OF VOLUMES TO BACKUP
       # ----------------------------------------
       - teste:/tobackup/teste:ro
       - portainer_data:/tobackup/portainer_data:ro
       # ----------------------------------------
+
       # OUTPUT FOLDER WITH THE BACKUPS
+      # ----------------------------------------
       - ./backup:/backup
       # ----------------------------------------
+
       # DO NOT DELETE THE NEXT LINE
       - /var/run/docker.sock:/var/run/docker.sock
 

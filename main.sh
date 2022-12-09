@@ -7,9 +7,15 @@ else
 fi
 
 if [[ -z "${FILENAME_ENV}" ]]; then
-    FILENAME="output"
+    FILENAME="output".tar.gz
 else
-    FILENAME="${FILENAME_ENV}"
+    FILENAME="${FILENAME_ENV}".tar.gz
+fi
+
+if [[ -z "${MAX_FILESIZE_ENV}" ]]; then
+    MAX_FILESIZE=4000m
+else
+    MAX_FILESIZE=${MAX_FILESIZE_ENV}
 fi
 
 if ! [[ "$MODE" == "backup" || "$MODE" == "restore" ]]; then
@@ -24,8 +30,9 @@ RESTORED_DIR=/restored
 #### BACKUP UTILITY ####
 if [[ "$MODE" == "backup" ]]; then
     echo "---- STARTING BACKUP ----"
-    tar -C $TO_BACKUP_DIR -czvf "$FILENAME.tar.gz" .
-    cp "$FILENAME.tar.gz" $BACKUPS_DIR
+    cd $BACKUPS_DIR
+    rm -rf $FILENAME*
+    tar -C $TO_BACKUP_DIR -cvzf - . | split -b $MAX_FILESIZE - "$FILENAME".
     echo "---- BACKUP ENDED ----"
     exit 0
 fi
@@ -35,7 +42,8 @@ fi
 if [[ "$MODE" == "restore" ]]; then
     echo "---- STARTING RESTORE ----"
     mkdir $RESTORED_DIR
-    tar xvzf $BACKUPS_DIR/$FILENAME.tar.gz -C $RESTORED_DIR/.
+    cd $RESTORED_DIR
+    cat $BACKUPS_DIR/$FILENAME.* | tar xzvf -
     for dir in $RESTORED_DIR/*/ ; do
         basename=$(basename $dir)2
         docker volume create "$basename"
