@@ -3,6 +3,8 @@ source ./utils/functions.sh
 
 export WORKDIR=$(pwd)
 export MODE=$(InitializeVars "MODE" "backup" "")
+export APP_NAME_TAG="[RESTORIX]"
+APP_VERSION=$(cat version.txt)
 
 cat << "EOF"
 ██████  ███████ ███████ ████████  ██████  ██████  ██ ██   ██ 
@@ -10,10 +12,14 @@ cat << "EOF"
 ██████  █████   ███████    ██    ██    ██ ██████  ██   ███   
 ██   ██ ██           ██    ██    ██    ██ ██   ██ ██  ██ ██  
 ██   ██ ███████ ███████    ██     ██████  ██   ██ ██ ██   ██ 
-                                                                                                                          
-v0.0.1-alpha.1
-                                                                                                                          
+                                                                                                                                                                                     
+                                                                                                                                                                                     
 EOF
+echo "                        Version:                             "
+echo "                        $APP_VERSION                         "
+echo "                                                             "
+echo "                                                             "
+
 
 if [[ -z "$CRONTAB_ENV" || $MODE != "backup" ]]; then
     bash ./main.sh
@@ -25,5 +31,5 @@ bash ./main.sh
 crontab -l | { cat; echo "$CRONTAB_ENV bash $WORKDIR/main.sh"; } | crontab -
 
 # Start cron
-echo "Starting cron..."
+echo "$APP_NAME_TAG Starting cron..."
 crond -f

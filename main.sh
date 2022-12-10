@@ -2,7 +2,6 @@
 cd $WORKDIR
 source ./utils/functions.sh
 
-APP_NAME_TAG="[RESTORIX]"
 BACKUPS_DIR=/backup
 TO_BACKUP_DIR=/tobackup
 RESTORED_DIR=/restored
