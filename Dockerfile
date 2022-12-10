@@ -9,5 +9,6 @@ RUN apk add bash docker openssh sshpass
 
 ADD main.sh /app
 ADD start.sh /app
+ADD utils/ /app/utils/
 
 ENTRYPOINT [ "./start.sh" ]

@@ -1,5 +1,8 @@
 #!/bin/bash
-WORKDIR=$(pwd)
+source ./utils/functions.sh
+
+export WORKDIR=$(pwd)
+export MODE=$(InitializeVars "MODE" "backup" "")
 
 cat << "EOF"
 ██████  ███████ ███████ ████████  ██████  ██████  ██ ██   ██ 
@@ -12,7 +15,7 @@ v0.0.1-alpha.1
                                                                                                                           
 EOF
 
-if [ -z "$CRONTAB_ENV" ]; then
+if [[ -z "$CRONTAB_ENV" || $MODE != "backup" ]]; then
     bash ./main.sh
     exit 0
 fi

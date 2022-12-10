@@ -1,19 +1,13 @@
 #!/bin/bash
+cd $WORKDIR
+source ./utils/functions.sh
+
 APP_NAME_TAG="[RESTORIX]"
 BACKUPS_DIR=/backup
 TO_BACKUP_DIR=/tobackup
 RESTORED_DIR=/restored
 
-function InitializeVars() {
-    local argEnv=$(printenv | grep "$1_ENV" | cut -d '=' -f 2)
-    if [[ -z "$argEnv" ]]; then
-        local outVar=$2
-    else
-        local outVar=$argEnv$3
-    fi
-    echo $outVar
-}
-MODE=$(InitializeVars "MODE" "backup" "")
+
 FILENAME=$(InitializeVars "FILENAME" "output" ".tar.gz")
 MAX_FILESIZE=$(InitializeVars "MAX_FILESIZE" "4000m" "")
 
@@ -42,7 +36,7 @@ mkdir -p $BACKUPS_DIR
 if [[ "$MODE" == "backup" ]]; then
 
     echo "$APP_NAME_TAG ---- STARTING BACKUP ----"
-    cd $BACKUPS_DIR
+    pushd $BACKUPS_DIR 1> /dev/null
     rm -rf $FILENAME*
     tar -C $TO_BACKUP_DIR -cvzf - ./ | split -b $MAX_FILESIZE - "$FILENAME".
 
@@ -51,7 +45,7 @@ if [[ "$MODE" == "backup" ]]; then
         sshpass -p "$SSH_PASSWORD" scp -o "StrictHostKeyChecking=no" -r $BACKUPS_DIR/* $SSH_USERNAME@$SSH_HOST:$SSH_PATH
         echo "$APP_NAME_TAG SEND FILE THROUGH SSH: ended"
     fi
-
+    popd 1> /dev/null
     echo "$APP_NAME_TAG ---- BACKUP ENDED ----"
     exit 0
 fi
@@ -68,7 +62,7 @@ if [[ "$MODE" == "restore" ]]; then
     fi
 
     mkdir $RESTORED_DIR
-    cd $RESTORED_DIR
+    pushd $RESTORED_DIR 1> /dev/null
     cat $BACKUPS_DIR/$FILENAME.* | tar xzvf -
 
     for dir in $RESTORED_DIR/*/ ; do
@@ -79,6 +73,7 @@ if [[ "$MODE" == "restore" ]]; then
         docker cp $dir/. helper:/data 1> /dev/null
         docker rm helper 1> /dev/null
     done
+    popd 1> /dev/null
     echo "$APP_NAME_TAG ---- RESTORE ENDED ----"
     exit 0
 fi
