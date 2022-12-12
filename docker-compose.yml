@@ -2,8 +2,8 @@ version: "3"
 
 services:
   restorix:
-    image: specialaro/restorix:latest
-    container_name: restorix
+    image: specialaro/restorix-core:latest
+    container_name: restorix-core
     restart: "no"
     environment:
       # RESTORIX MODE: backup OR restore
