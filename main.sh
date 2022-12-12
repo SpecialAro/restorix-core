@@ -68,7 +68,7 @@ if [[ "$MODE" == "restore" ]]; then
         basename=$(basename $dir)
         docker volume create "$basename" 1> /dev/null
 
-        docker run -v $basename:/data --name helper busybox true 1> /dev/null
+        docker run --rm -v $basename:/data --name helper busybox true 1> /dev/null
         docker cp $dir/. helper:/data 1> /dev/null
         docker rm helper 1> /dev/null
     done
